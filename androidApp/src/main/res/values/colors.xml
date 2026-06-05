@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1976D2</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="background">#F9FBFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_background">#1A1C1E</color>
+    <color name="on_surface">#1A1C1E</color>
+    <color name="gradient_start">#E3F2FD</color>
+    <color name="gradient_end">#F9FBFC</color>
+</resources>
