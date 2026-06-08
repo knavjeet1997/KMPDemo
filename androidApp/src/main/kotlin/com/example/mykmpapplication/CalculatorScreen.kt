@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CalculatorScreen() {
-    CalculatorTheme {
+    AppTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = Color.Transparent

@@ -6,7 +6,7 @@ import androidx.compose.ui.res.colorResource
 import com.example.mykmpapplication.R
 
 @Composable
-fun CalculatorTheme(
+fun AppTheme(
     content: @Composable () -> Unit
 ) {
     // Resolve colors dynamically from resource XML (which automatically switches values based on light/dark mode)
