@@ -8,4 +8,18 @@
     <color name="on_surface">#1A1C1E</color>
     <color name="gradient_start">#E3F2FD</color>
     <color name="gradient_end">#F9FBFC</color>
+    
+    <!-- Calculator Colors -->
+    <color name="calc_bg_start">#F3F4F6</color>
+    <color name="calc_bg_end">#E5E7EB</color>
+    <color name="calc_display_text">#111827</color>
+    <color name="calc_expression_text">#6B7280</color>
+    <color name="calc_number_bg">#FFFFFF</color>
+    <color name="calc_number_fg">#111827</color>
+    <color name="calc_function_bg">#D1D5DB</color>
+    <color name="calc_function_fg">#111827</color>
+    <color name="calc_operator_bg">#F97316</color>
+    <color name="calc_operator_fg">#FFFFFF</color>
+    <!-- Signup Screen Colors -->
+    <color name="text_field_container">#F5F5F5</color>
 </resources>
