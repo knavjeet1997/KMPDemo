@@ -22,11 +22,16 @@ dependencies {
 
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
+    implementation(libs.androidx.lifecycle.viewmodelCompose)
 }
 
 android {
     namespace = "com.example.mykmpapplication"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.mykmpapplication"
@@ -34,6 +39,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        buildConfigField("String", "BASE_URL", "\"https://trackninja.io/savetrackninja/api/v1\"")
     }
     packaging {
         resources {

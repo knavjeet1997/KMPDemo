@@ -1,4 +1,4 @@
-package com.example.mykmpapplication
+package com.example.mykmpapplication.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.example.mykmpapplication.R
 
 @Composable
 fun CommonTextField(

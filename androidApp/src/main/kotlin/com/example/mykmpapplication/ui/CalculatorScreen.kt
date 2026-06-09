@@ -1,4 +1,4 @@
-package com.example.mykmpapplication
+package com.example.mykmpapplication.ui
 
 import android.content.res.Configuration
 import androidx.compose.animation.core.animateFloatAsState
@@ -27,6 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.absoluteValue
+import com.example.mykmpapplication.R
+import com.example.mykmpapplication.AppTheme
+import com.example.mykmpapplication.Calculator
 
 @Composable
 fun CalculatorScreen() {
@@ -367,4 +370,3 @@ fun CalculatorScreenPreviewLight() {
 fun CalculatorScreenPreviewDark() {
     CalculatorScreen()
 }
-

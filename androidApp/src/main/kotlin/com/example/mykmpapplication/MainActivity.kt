@@ -1,11 +1,18 @@
 package com.example.mykmpapplication
 
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.mykmpapplication.ui.SignupScreen
+import com.example.mykmpapplication.ui.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,7 +20,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            SignupScreen()
+            var currentScreen by remember { mutableStateOf("signup") }
+
+            Crossfade(targetState = currentScreen, label = "screenTransition") { screen ->
+                when (screen) {
+                    "signup" -> SignupScreen(onNavigateToHome = {
+                        currentScreen = "home"
+                    })
+                    "home" -> HomeScreen()
+                }
+            }
         }
     }
 }
