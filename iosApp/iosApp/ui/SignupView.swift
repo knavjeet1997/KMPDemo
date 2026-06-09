@@ -10,7 +10,7 @@ class ObservableSignupViewModel: ObservableObject {
     private var stateWatcher: Closeable? = nil
     private var eventsWatcher: Closeable? = nil
 
-    init(viewModel: SignupViewModel = SignupViewModel()) {
+    init(viewModel: SignupViewModel = KoinHelper().getSignupViewModel()) {
         self.viewModel = viewModel
         self.state = viewModel.uiState.value as! SignupUiState
         

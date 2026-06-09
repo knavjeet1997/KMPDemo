@@ -11,6 +11,8 @@ struct iOSApp: App {
         HeaderConfig.shared.latitude = "18.3123232"
         HeaderConfig.shared.longitude = "73.556723434"
         HeaderConfig.shared.userAgent = "Darwin/Ktor"
+        
+        AppModuleKt.doInitKoin()
     }
 
     var body: some Scene {
