@@ -7,38 +7,45 @@ class ObservableSignupViewModel: ObservableObject {
     @Published var toastMessage: String? = nil
     var onNavigateToHomeCallback: (() -> Void)? = nil
 
+    private var stateWatcher: Closeable? = nil
+    private var eventsWatcher: Closeable? = nil
+
     init(viewModel: SignupViewModel = SignupViewModel()) {
         self.viewModel = viewModel
         self.state = viewModel.uiState.value as! SignupUiState
         
-        viewModel.observeState { [weak self] newState in
-            DispatchQueue.main.async {
-                self?.state = newState
-            }
+        self.stateWatcher = viewModel.uiState.watch { [weak self] newState in
+            self?.state = newState as! SignupUiState
         }
 
-        viewModel.observeEvents { [weak self] event in
-            DispatchQueue.main.async {
-                if let showToast = event as? SignupUiEventShowToast {
+        self.eventsWatcher = viewModel.events.watch { [weak self] event in
+            switch event {
+            case let showToast as SignupUiEventShowToast:
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    self?.toastMessage = showToast.message
+                }
+                
+                // Automatically hide toast after 3 seconds
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                     withAnimation(.easeInOut(duration: 0.4)) {
-                        self?.toastMessage = showToast.message
-                    }
-                    
-                    // Automatically hide toast after 3 seconds
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                        withAnimation(.easeInOut(duration: 0.4)) {
-                            if self?.toastMessage == showToast.message {
-                                self?.toastMessage = nil
-                            }
+                        if self?.toastMessage == showToast.message {
+                            self?.toastMessage = nil
                         }
                     }
-                } else if event is SignupUiEventNavigateToHome {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                        self?.onNavigateToHomeCallback?()
-                    }
                 }
+            case is SignupUiEventNavigateToHome:
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                    self?.onNavigateToHomeCallback?()
+                }
+            default:
+                break
             }
         }
+    }
+
+    deinit {
+        stateWatcher?.close()
+        eventsWatcher?.close()
     }
 }
 
