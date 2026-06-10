@@ -33,11 +33,11 @@ import com.example.mykmpapplication.common.CommonTextField
 import com.example.mykmpapplication.common.CustomLoader
 import com.example.mykmpapplication.common.CustomToast
 import kotlinx.coroutines.delay
-import org.koin.compose.koinInject
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = koinInject(),
+    viewModel: LoginViewModel = koinViewModel(),
     onNavigateToHome: () -> Unit,
     onNavigateToSignup: () -> Unit
 ) {

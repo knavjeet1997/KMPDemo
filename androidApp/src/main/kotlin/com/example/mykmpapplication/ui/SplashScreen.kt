@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mykmpapplication.R
 import kotlinx.coroutines.delay
-import org.koin.compose.koinInject
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SplashScreen(
-    viewModel: SplashViewModel = koinInject(),
+    viewModel: SplashViewModel = koinViewModel(),
     onNavigateToHome: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {

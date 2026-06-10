@@ -1,16 +1,14 @@
 package com.example.mykmpapplication
 
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.mykmpapplication.ui.SplashScreen
 import com.example.mykmpapplication.ui.LoginScreen
 import com.example.mykmpapplication.ui.SignupScreen
@@ -25,38 +23,56 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val sessionManager: SessionManager = koinInject()
-            var currentScreen by remember { mutableStateOf("splash") }
+            val navController = rememberNavController()
 
-            Crossfade(targetState = currentScreen, label = "screenTransition") { screen ->
-                when (screen) {
-                    "splash" -> SplashScreen(
+            NavHost(navController = navController, startDestination = "splash") {
+                composable("splash") {
+                    SplashScreen(
                         onNavigateToHome = {
-                            currentScreen = "home"
+                            navController.navigate("home") {
+                                popUpTo("splash") { inclusive = true }
+                            }
                         },
                         onNavigateToLogin = {
-                            currentScreen = "login"
+                            navController.navigate("login") {
+                                popUpTo("splash") { inclusive = true }
+                            }
                         }
                     )
-                    "login" -> LoginScreen(
+                }
+                composable("login") {
+                    LoginScreen(
                         onNavigateToHome = {
-                            currentScreen = "home"
+                            navController.navigate("home") {
+                                popUpTo("login") { inclusive = true }
+                            }
                         },
                         onNavigateToSignup = {
-                            currentScreen = "signup"
+                            navController.navigate("signup")
                         }
                     )
-                    "signup" -> SignupScreen(
+                }
+                composable("signup") {
+                    SignupScreen(
                         onNavigateToHome = {
-                            currentScreen = "home"
+                            navController.navigate("home") {
+                                popUpTo("login") { inclusive = true }
+                            }
                         },
                         onNavigateToLogin = {
-                            currentScreen = "login"
+                            navController.navigate("login") {
+                                popUpTo("signup") { inclusive = true }
+                            }
                         }
                     )
-                    "home" -> HomeScreen(
+                }
+                composable("home") {
+                    HomeScreen(
                         onLogout = {
                             sessionManager.clear()
-                            currentScreen = "login"
+                            navController.navigate("login") {
+                                popUpTo("home") { inclusive = true }
+                            }
                         }
                     )
                 }

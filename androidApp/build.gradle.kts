@@ -24,6 +24,8 @@ dependencies {
     debugImplementation(libs.compose.uiTooling)
     implementation(libs.androidx.lifecycle.viewmodelCompose)
     implementation(libs.koin.compose)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.navigation.compose)
 }
 
 android {

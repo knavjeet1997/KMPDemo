@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mykmpapplication.R
 
-import org.koin.compose.koinInject
+import org.koin.androidx.compose.koinViewModel
 import androidx.compose.ui.Alignment
 
 import androidx.compose.runtime.collectAsState
@@ -42,7 +42,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SignupScreen(
-    viewModel: SignupViewModel = koinInject(),
+    viewModel: SignupViewModel = koinViewModel(),
     onNavigateToHome: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
