@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.mykmpapplication.ui.LoginScreen
 import com.example.mykmpapplication.ui.SignupScreen
 import com.example.mykmpapplication.ui.HomeScreen
 
@@ -20,13 +21,26 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            var currentScreen by remember { mutableStateOf("signup") }
+            var currentScreen by remember { mutableStateOf("login") }
 
             Crossfade(targetState = currentScreen, label = "screenTransition") { screen ->
                 when (screen) {
-                    "signup" -> SignupScreen(onNavigateToHome = {
-                        currentScreen = "home"
-                    })
+                    "login" -> LoginScreen(
+                        onNavigateToHome = {
+                            currentScreen = "home"
+                        },
+                        onNavigateToSignup = {
+                            currentScreen = "signup"
+                        }
+                    )
+                    "signup" -> SignupScreen(
+                        onNavigateToHome = {
+                            currentScreen = "home"
+                        },
+                        onNavigateToLogin = {
+                            currentScreen = "login"
+                        }
+                    )
                     "home" -> HomeScreen()
                 }
             }

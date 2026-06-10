@@ -33,4 +33,26 @@ class AuthRepositoryImpl(
             NetworkResult.Error("Network failure: ${e.message}", e)
         }
     }
+
+    override suspend fun login(email: String, password: String): NetworkResult<String> {
+        val requestBody = LoginRequest(
+            email = email,
+            password = password,
+            check = ""
+        )
+        return try {
+            val response = client.post(ApiEndpoints.LOGIN) {
+                setBody(requestBody)
+            }
+
+            val responseBody = response.bodyAsText()
+            if (response.status.isSuccess()) {
+                NetworkResult.Success(responseBody)
+            } else {
+                NetworkResult.Error("Failed with code ${response.status.value}: $responseBody")
+            }
+        } catch (e: Exception) {
+            NetworkResult.Error("Network failure: ${e.message}", e)
+        }
+    }
 }

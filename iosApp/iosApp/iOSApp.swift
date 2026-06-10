@@ -1,9 +1,15 @@
 import SwiftUI
 import Shared
 
+enum AppScreen {
+    case login
+    case signup
+    case home
+}
+
 @main
 struct iOSApp: App {
-    @State private var navigateToHome = false
+    @State private var currentScreen: AppScreen = .login
 
     init() {
         HeaderConfig.shared.deviceType = "ios"
@@ -18,22 +24,47 @@ struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if navigateToHome {
+                switch currentScreen {
+                case .login:
+                    LoginView(
+                        onNavigateToHome: {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                currentScreen = .home
+                            }
+                        },
+                        onNavigateToSignup: {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                currentScreen = .signup
+                            }
+                        }
+                    )
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .leading).combined(with: .opacity),
+                        removal: .move(edge: .trailing).combined(with: .opacity)
+                    ))
+                case .signup:
+                    SignupView(
+                        onNavigateToHome: {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                currentScreen = .home
+                            }
+                        },
+                        onNavigateToLogin: {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                currentScreen = .login
+                            }
+                        }
+                    )
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing).combined(with: .opacity),
+                        removal: .move(edge: .leading).combined(with: .opacity)
+                    ))
+                case .home:
                     HomeScreenView()
                         .transition(.asymmetric(
                             insertion: .move(edge: .trailing).combined(with: .opacity),
                             removal: .move(edge: .leading).combined(with: .opacity)
                         ))
-                } else {
-                    SignupView(onNavigateToHome: {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            navigateToHome = true
-                        }
-                    })
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .leading).combined(with: .opacity),
-                        removal: .move(edge: .trailing).combined(with: .opacity)
-                    ))
                 }
             }
         }

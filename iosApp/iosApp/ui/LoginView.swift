@@ -1,26 +1,26 @@
 import SwiftUI
 import Shared
 
-class ObservableSignupViewModel: ObservableObject {
-    let viewModel: SignupViewModel
-    @Published var state: SignupUiState
+class ObservableLoginViewModel: ObservableObject {
+    let viewModel: LoginViewModel
+    @Published var state: LoginUiState
     @Published var toastMessage: String? = nil
     var onNavigateToHomeCallback: (() -> Void)? = nil
 
     private var stateWatcher: Closeable? = nil
     private var eventsWatcher: Closeable? = nil
 
-    init(viewModel: SignupViewModel = KoinHelper().getSignupViewModel()) {
+    init(viewModel: LoginViewModel = KoinHelper().getLoginViewModel()) {
         self.viewModel = viewModel
-        self.state = viewModel.uiState.value as! SignupUiState
+        self.state = viewModel.uiState.value as! LoginUiState
         
         self.stateWatcher = viewModel.uiState.watch { [weak self] newState in
-            self?.state = newState as! SignupUiState
+            self?.state = newState as! LoginUiState
         }
 
         self.eventsWatcher = viewModel.events.watch { [weak self] event in
             switch event {
-            case let showToast as SignupUiEventShowToast:
+            case let showToast as LoginUiEventShowToast:
                 withAnimation(.easeInOut(duration: 0.4)) {
                     self?.toastMessage = showToast.message
                 }
@@ -33,7 +33,7 @@ class ObservableSignupViewModel: ObservableObject {
                         }
                     }
                 }
-            case is SignupUiEventNavigateToHome:
+            case is LoginUiEventNavigateToHome:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                     self?.onNavigateToHomeCallback?()
                 }
@@ -49,11 +49,11 @@ class ObservableSignupViewModel: ObservableObject {
     }
 }
 
-struct SignupView: View {
+struct LoginView: View {
     let onNavigateToHome: () -> Void
-    let onNavigateToLogin: () -> Void
+    let onNavigateToSignup: () -> Void
     @Environment(\.colorScheme) var colorScheme
-    @StateObject private var observableViewModel = ObservableSignupViewModel()
+    @StateObject private var observableViewModel = ObservableLoginViewModel()
 
     private var gradientStart: Color {
         colorScheme == .dark ? Color(red: 13.0/255.0, green: 27.0/255.0, blue: 42.0/255.0) : Color(red: 227.0/255.0, green: 242.0/255.0, blue: 253.0/255.0)
@@ -81,7 +81,7 @@ struct SignupView: View {
             .ignoresSafeArea()
 
             VStack(spacing: 20) {
-                Text("Sign Up")
+                Text("Log In")
                     .font(.system(size: 40, weight: .bold))
                     .foregroundColor(colorScheme == .dark ? .white : .black)
                     .padding(.top, 40)
@@ -117,25 +117,11 @@ struct SignupView: View {
                 .foregroundColor(inputFg)
                 .cornerRadius(12)
 
-                // Confirm Password Input
-                SecureField(
-                    "",
-                    text: Binding(
-                        get: { observableViewModel.state.confirmPassword },
-                        set: { observableViewModel.viewModel.onConfirmPasswordChange(newValue: $0) }
-                    ),
-                    prompt: Text("Confirm Password").foregroundColor(.gray)
-                )
-                .padding()
-                .background(inputBg)
-                .foregroundColor(inputFg)
-                .cornerRadius(12)
-
-                // Navigation Link to Login
+                // Navigation Link to Signup
                 Button(action: {
-                    onNavigateToLogin()
+                    onNavigateToSignup()
                 }) {
-                    Text("Already have an account? Log In")
+                    Text("Don't have an account? Sign Up")
                         .font(.system(size: 16))
                         .foregroundColor(.orange)
                         .underline()
@@ -144,11 +130,11 @@ struct SignupView: View {
 
                 Spacer()
 
-                // Sign Up Button
+                // Log In Button
                 Button(action: {
-                    observableViewModel.viewModel.register()
+                    observableViewModel.viewModel.login()
                 }) {
-                    Text("Sign Up")
+                    Text("Log In")
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity, minHeight: 50)

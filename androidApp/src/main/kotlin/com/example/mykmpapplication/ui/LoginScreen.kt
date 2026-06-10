@@ -4,7 +4,10 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,41 +18,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mykmpapplication.R
-
-import org.koin.compose.koinInject
-import androidx.compose.ui.Alignment
-
-import androidx.compose.runtime.collectAsState
-import com.example.mykmpapplication.ui.SignupViewModel
-import com.example.mykmpapplication.ui.SignupUiEvent
 import com.example.mykmpapplication.common.CommonTextField
 import com.example.mykmpapplication.common.CustomLoader
 import com.example.mykmpapplication.common.CustomToast
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.text.style.TextDecoration
 import kotlinx.coroutines.delay
+import org.koin.compose.koinInject
 
 @Composable
-fun SignupScreen(
-    viewModel: SignupViewModel = koinInject(),
+fun LoginScreen(
+    viewModel: LoginViewModel = koinInject(),
     onNavigateToHome: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToSignup: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val email = uiState.email
     val password = uiState.password
-    val confirmPassword = uiState.confirmPassword
 
     var toastMessage by remember { mutableStateOf<String?>(null) }
     var toastVisible by remember { mutableStateOf(false) }
@@ -57,11 +51,11 @@ fun SignupScreen(
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                is SignupUiEvent.NavigateToHome -> {
+                is LoginUiEvent.NavigateToHome -> {
                     delay(1200)
                     onNavigateToHome()
                 }
-                is SignupUiEvent.ShowToast -> {
+                is LoginUiEvent.ShowToast -> {
                     toastMessage = event.message
                 }
             }
@@ -98,7 +92,7 @@ fun SignupScreen(
                     Text(
                         modifier = Modifier.fillMaxWidth().padding(top = 20.dp),
                         fontSize = 40.sp,
-                        text = "Sign Up",
+                        text = "Log In",
                         textAlign = TextAlign.Center
                     )
                     CommonTextField(
@@ -111,11 +105,6 @@ fun SignupScreen(
                         onValueChange = { viewModel.onPasswordChange(it) },
                         placeholder = "Password"
                     )
-                    CommonTextField(
-                        value = confirmPassword,
-                        onValueChange = { viewModel.onConfirmPasswordChange(it) },
-                        placeholder = "Confirm Password"
-                    )
 
                     Button(
                         modifier = Modifier
@@ -123,17 +112,17 @@ fun SignupScreen(
                             .height(50.dp),
                         enabled = !uiState.isLoading,
                         onClick = {
-                            viewModel.register()
+                            viewModel.login()
                         }
-                    ) { 
-                        Text("Sign Up") 
+                    ) {
+                        Text("Log In")
                     }
 
                     Text(
-                        text = "Already have an account? Log In",
+                        text = "Don't have an account? Sign Up",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onNavigateToLogin() }
+                            .clickable { onNavigateToSignup() }
                             .padding(10.dp),
                         textAlign = TextAlign.Center,
                         color = colorResource(id = R.color.calc_operator_bg),
@@ -165,8 +154,8 @@ fun SignupScreen(
 
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
-fun SignupScreenPreviewLight() {
-    SignupScreen(onNavigateToHome = {}, onNavigateToLogin = {})
+fun LoginScreenPreviewLight() {
+    LoginScreen(onNavigateToHome = {}, onNavigateToSignup = {})
 }
 
 @Preview(
@@ -175,6 +164,6 @@ fun SignupScreenPreviewLight() {
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun SignupScreenPreviewDark() {
-    SignupScreen(onNavigateToHome = {}, onNavigateToLogin = {})
+fun LoginScreenPreviewDark() {
+    LoginScreen(onNavigateToHome = {}, onNavigateToSignup = {})
 }
