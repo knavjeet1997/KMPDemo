@@ -2,6 +2,7 @@ import SwiftUI
 import Shared
 
 enum AppScreen {
+    case splash
     case login
     case signup
     case home
@@ -9,7 +10,7 @@ enum AppScreen {
 
 @main
 struct iOSApp: App {
-    @State private var currentScreen: AppScreen = .login
+    @State private var currentScreen: AppScreen = .splash
 
     init() {
         HeaderConfig.shared.deviceType = "ios"
@@ -25,6 +26,23 @@ struct iOSApp: App {
         WindowGroup {
             ZStack {
                 switch currentScreen {
+                case .splash:
+                    SplashView(
+                        onNavigateToHome: {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                currentScreen = .home
+                            }
+                        },
+                        onNavigateToLogin: {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                currentScreen = .login
+                            }
+                        }
+                    )
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .leading).combined(with: .opacity),
+                        removal: .move(edge: .trailing).combined(with: .opacity)
+                    ))
                 case .login:
                     LoginView(
                         onNavigateToHome: {
@@ -60,11 +78,16 @@ struct iOSApp: App {
                         removal: .move(edge: .leading).combined(with: .opacity)
                     ))
                 case .home:
-                    HomeScreenView()
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .trailing).combined(with: .opacity),
-                            removal: .move(edge: .leading).combined(with: .opacity)
-                        ))
+                    HomeScreenView(onLogout: {
+                        KoinHelper().getSessionManager().clear()
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            currentScreen = .login
+                        }
+                    })
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing).combined(with: .opacity),
+                        removal: .move(edge: .leading).combined(with: .opacity)
+                    ))
                 }
             }
         }

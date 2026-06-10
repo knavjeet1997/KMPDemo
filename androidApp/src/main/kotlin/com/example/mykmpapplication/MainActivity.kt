@@ -11,9 +11,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.mykmpapplication.ui.SplashScreen
 import com.example.mykmpapplication.ui.LoginScreen
 import com.example.mykmpapplication.ui.SignupScreen
 import com.example.mykmpapplication.ui.HomeScreen
+import com.example.mykmpapplication.data.SessionManager
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,10 +24,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            var currentScreen by remember { mutableStateOf("login") }
+            val sessionManager: SessionManager = koinInject()
+            var currentScreen by remember { mutableStateOf("splash") }
 
             Crossfade(targetState = currentScreen, label = "screenTransition") { screen ->
                 when (screen) {
+                    "splash" -> SplashScreen(
+                        onNavigateToHome = {
+                            currentScreen = "home"
+                        },
+                        onNavigateToLogin = {
+                            currentScreen = "login"
+                        }
+                    )
                     "login" -> LoginScreen(
                         onNavigateToHome = {
                             currentScreen = "home"
@@ -41,7 +53,12 @@ class MainActivity : ComponentActivity() {
                             currentScreen = "login"
                         }
                     )
-                    "home" -> HomeScreen()
+                    "home" -> HomeScreen(
+                        onLogout = {
+                            sessionManager.clear()
+                            currentScreen = "login"
+                        }
+                    )
                 }
             }
         }

@@ -22,7 +22,7 @@ class LoginViewModel(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: CommonStateFlow<LoginUiState> = _uiState.asStateFlow().asCommonStateFlow()
 
-    private val _events = MutableSharedFlow<LoginUiEvent>(extraBufferCapacity = 1)
+    private val _events = MutableSharedFlow<LoginUiEvent>(extraBufferCapacity = 64)
     val events: CommonFlow<LoginUiEvent> = _events.asSharedFlow().asCommonFlow()
 
     fun onEmailChange(newValue: String) {

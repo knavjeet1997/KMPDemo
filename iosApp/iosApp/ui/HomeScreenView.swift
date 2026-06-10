@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HomeScreenView: View {
+    let onLogout: () -> Void
     @Environment(\.colorScheme) var colorScheme
 
     private var gradientStart: Color {
@@ -21,16 +22,31 @@ struct HomeScreenView: View {
             .ignoresSafeArea()
 
             VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        onLogout()
+                    }) {
+                        Text("Log Out")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(.red)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Color.red.opacity(0.2))
+                            .cornerRadius(8)
+                    }
+                    .padding(.top, 20)
+                    .padding(.trailing, 20)
+                }
+
+                Spacer()
+
                 Text("Welcome to Home Screen!")
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(colorScheme == .dark ? .white : .black)
+
+                Spacer()
             }
         }
-    }
-}
-
-struct HomeScreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeScreenView()
     }
 }
