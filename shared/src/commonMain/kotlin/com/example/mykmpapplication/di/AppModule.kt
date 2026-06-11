@@ -3,9 +3,9 @@ package com.example.mykmpapplication.di
 import com.example.mykmpapplication.data.AuthRepository
 import com.example.mykmpapplication.data.AuthRepositoryImpl
 import com.example.mykmpapplication.data.SessionManager
-import com.example.mykmpapplication.ui.SignupViewModel
-import com.example.mykmpapplication.ui.LoginViewModel
-import com.example.mykmpapplication.ui.SplashViewModel
+import com.example.mykmpapplication.ui.signup.SignupViewModel
+import com.example.mykmpapplication.ui.login.LoginViewModel
+import com.example.mykmpapplication.ui.splash.SplashViewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.koin.core.component.KoinComponent

@@ -1,4 +1,4 @@
-package com.example.mykmpapplication.ui
+package com.example.mykmpapplication.ui.login
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically

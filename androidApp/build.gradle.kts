@@ -20,12 +20,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.ui)
 
-    implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
-    implementation(libs.androidx.lifecycle.viewmodelCompose)
-    implementation(libs.koin.compose)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.androidx.navigation.compose)
 }
 
 android {

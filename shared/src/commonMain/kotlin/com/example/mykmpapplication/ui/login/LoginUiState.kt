@@ -1,4 +1,4 @@
-package com.example.mykmpapplication.ui
+package com.example.mykmpapplication.ui.login
 
 data class LoginUiState(
     val email: String = "",

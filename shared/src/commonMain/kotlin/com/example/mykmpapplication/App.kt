@@ -2,10 +2,10 @@ package com.example.mykmpapplication
 
 import androidx.compose.runtime.*
 import com.example.mykmpapplication.data.SessionManager
-import com.example.mykmpapplication.ui.HomeScreen
-import com.example.mykmpapplication.ui.LoginScreen
-import com.example.mykmpapplication.ui.SignupScreen
-import com.example.mykmpapplication.ui.SplashScreen
+import com.example.mykmpapplication.ui.home.HomeScreen
+import com.example.mykmpapplication.ui.login.LoginScreen
+import com.example.mykmpapplication.ui.signup.SignupScreen
+import com.example.mykmpapplication.ui.splash.SplashScreen
 import org.koin.compose.koinInject
 
 enum class Screen {

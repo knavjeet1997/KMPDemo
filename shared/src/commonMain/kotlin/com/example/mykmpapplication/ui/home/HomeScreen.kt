@@ -1,4 +1,4 @@
-package com.example.mykmpapplication.ui
+package com.example.mykmpapplication.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

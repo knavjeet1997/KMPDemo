@@ -1,4 +1,4 @@
-package com.example.mykmpapplication.ui
+package com.example.mykmpapplication.ui.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,15 +15,15 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(
+class SignupViewModel(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: CommonStateFlow<LoginUiState> = _uiState.asStateFlow().asCommonStateFlow()
+    private val _uiState = MutableStateFlow(SignupUiState())
+    val uiState: CommonStateFlow<SignupUiState> = _uiState.asStateFlow().asCommonStateFlow()
 
-    private val _events = MutableSharedFlow<LoginUiEvent>(extraBufferCapacity = 64)
-    val events: CommonFlow<LoginUiEvent> = _events.asSharedFlow().asCommonFlow()
+    private val _events = MutableSharedFlow<SignupUiEvent>(extraBufferCapacity = 64)
+    val events: CommonFlow<SignupUiEvent> = _events.asSharedFlow().asCommonFlow()
 
     fun onEmailChange(newValue: String) {
         _uiState.update { it.copy(email = newValue) }
@@ -33,36 +33,41 @@ class LoginViewModel(
         _uiState.update { it.copy(password = newValue) }
     }
 
-    private fun sendEvent(event: LoginUiEvent) {
+    fun onConfirmPasswordChange(newValue: String) {
+        _uiState.update { it.copy(confirmPassword = newValue) }
+    }
+
+    private fun sendEvent(event: SignupUiEvent) {
         _events.tryEmit(event)
     }
 
-    fun login() {
+    fun register() {
         val currentState = _uiState.value
         
         val validationError = when {
-            currentState.email.isBlank() || currentState.password.isBlank() -> "All fields are required"
+            currentState.email.isBlank() || currentState.password.isBlank() || currentState.confirmPassword.isBlank() -> "All fields are required"
+            currentState.password != currentState.confirmPassword -> "Passwords do not match"
             else -> null
         }
 
         if (validationError != null) {
-            sendEvent(LoginUiEvent.ShowToast(validationError, isSuccess = false))
+            sendEvent(SignupUiEvent.ShowToast(validationError, isSuccess = false))
             return
         }
 
         _uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            val result = authRepository.login(currentState.email, currentState.password)
+            val result = authRepository.register(currentState.email, currentState.password)
             when (result) {
                 is NetworkResult.Success -> {
-                    _uiState.value = LoginUiState()
-                    sendEvent(LoginUiEvent.ShowToast("Login Successful!", isSuccess = true))
-                    sendEvent(LoginUiEvent.NavigateToHome)
+                    _uiState.value = SignupUiState()
+                    sendEvent(SignupUiEvent.ShowToast("Registration Successful!", isSuccess = true))
+                    sendEvent(SignupUiEvent.NavigateToHome)
                 }
                 is NetworkResult.Error -> {
                     _uiState.update { it.copy(isLoading = false) }
-                    sendEvent(LoginUiEvent.ShowToast(result.message, isSuccess = false))
+                    sendEvent(SignupUiEvent.ShowToast(result.message, isSuccess = false))
                 }
                 else -> {
                     _uiState.update { it.copy(isLoading = false) }

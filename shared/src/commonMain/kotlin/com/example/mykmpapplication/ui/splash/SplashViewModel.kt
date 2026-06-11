@@ -1,4 +1,4 @@
-package com.example.mykmpapplication.ui
+package com.example.mykmpapplication.ui.splash
 
 import androidx.lifecycle.ViewModel
 import com.example.mykmpapplication.data.SessionManager
