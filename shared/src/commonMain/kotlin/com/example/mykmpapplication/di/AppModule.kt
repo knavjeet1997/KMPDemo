@@ -20,8 +20,12 @@ val appModule = module {
 }
 
 fun initKoin() {
-    startKoin {
-        modules(appModule)
+    try {
+        startKoin {
+            modules(appModule)
+        }
+    } catch (e: Exception) {
+        // Koin already started, ignore
     }
 }
 

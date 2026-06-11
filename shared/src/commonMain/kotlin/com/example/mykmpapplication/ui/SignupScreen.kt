@@ -1,6 +1,5 @@
 package com.example.mykmpapplication.ui
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -22,28 +21,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mykmpapplication.R
+import com.example.mykmpapplication.AppColors
 import com.example.mykmpapplication.common.CommonTextField
 import com.example.mykmpapplication.common.CustomLoader
 import com.example.mykmpapplication.common.CustomToast
+import com.example.mykmpapplication.di.KoinHelper
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = koinViewModel(),
+fun SignupScreen(
+    viewModel: SignupViewModel = remember { KoinHelper().getSignupViewModel() },
     onNavigateToHome: () -> Unit,
-    onNavigateToSignup: () -> Unit
+    onNavigateToLogin: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val email = uiState.email
-    val password = uiState.password
 
     var toastMessage by remember { mutableStateOf<String?>(null) }
     var toastVisible by remember { mutableStateOf(false) }
@@ -51,11 +47,11 @@ fun LoginScreen(
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                is LoginUiEvent.NavigateToHome -> {
+                is SignupUiEvent.NavigateToHome -> {
                     delay(1200)
                     onNavigateToHome()
                 }
-                is LoginUiEvent.ShowToast -> {
+                is SignupUiEvent.ShowToast -> {
                     toastMessage = event.message
                 }
             }
@@ -72,8 +68,31 @@ fun LoginScreen(
         }
     }
 
-    val bgStart = colorResource(id = R.color.gradient_start)
-    val bgEnd = colorResource(id = R.color.gradient_end)
+    SignupScreenContent(
+        uiState = uiState,
+        toastVisible = toastVisible,
+        toastMessage = toastMessage,
+        onEmailChange = { viewModel.onEmailChange(it) },
+        onPasswordChange = { viewModel.onPasswordChange(it) },
+        onConfirmPasswordChange = { viewModel.onConfirmPasswordChange(it) },
+        onSignupClick = { viewModel.register() },
+        onNavigateToLogin = onNavigateToLogin
+    )
+}
+
+@Composable
+fun SignupScreenContent(
+    uiState: SignupUiState,
+    toastVisible: Boolean,
+    toastMessage: String?,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onSignupClick: () -> Unit,
+    onNavigateToLogin: () -> Unit
+) {
+    val bgStart = AppColors.gradientStart()
+    val bgEnd = AppColors.gradientEnd()
 
     MaterialTheme {
         Surface(
@@ -92,18 +111,23 @@ fun LoginScreen(
                     Text(
                         modifier = Modifier.fillMaxWidth().padding(top = 20.dp),
                         fontSize = 40.sp,
-                        text = "Log In",
+                        text = "Sign Up",
                         textAlign = TextAlign.Center
                     )
                     CommonTextField(
-                        value = email,
-                        onValueChange = { viewModel.onEmailChange(it) },
+                        value = uiState.email,
+                        onValueChange = onEmailChange,
                         placeholder = "Email"
                     )
                     CommonTextField(
-                        value = password,
-                        onValueChange = { viewModel.onPasswordChange(it) },
+                        value = uiState.password,
+                        onValueChange = onPasswordChange,
                         placeholder = "Password"
+                    )
+                    CommonTextField(
+                        value = uiState.confirmPassword,
+                        onValueChange = onConfirmPasswordChange,
+                        placeholder = "Confirm Password"
                     )
 
                     Button(
@@ -111,27 +135,24 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .height(50.dp),
                         enabled = !uiState.isLoading,
-                        onClick = {
-                            viewModel.login()
-                        }
+                        onClick = onSignupClick
                     ) {
-                        Text("Log In")
+                        Text("Sign Up")
                     }
 
                     Text(
-                        text = "Don't have an account? Sign Up",
+                        text = "Already have an account? Log In",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onNavigateToSignup() }
+                            .clickable { onNavigateToLogin() }
                             .padding(10.dp),
                         textAlign = TextAlign.Center,
-                        color = colorResource(id = R.color.calc_operator_bg),
+                        color = AppColors.calcOperatorBg(),
                         textDecoration = TextDecoration.Underline,
                         fontSize = 16.sp
                     )
                 }
 
-                // Smooth sliding custom toast overlay
                 AnimatedVisibility(
                     visible = toastVisible && toastMessage != null,
                     enter = slideInVertically(initialOffsetY = { -it }),
@@ -143,7 +164,6 @@ fun LoginScreen(
                     }
                 }
 
-                // Simplified loader overlay call using isLoading state
                 if (uiState.isLoading) {
                     CustomLoader()
                 }
@@ -152,18 +172,17 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true, name = "Light Mode")
+@Preview
 @Composable
-fun LoginScreenPreviewLight() {
-    LoginScreen(onNavigateToHome = {}, onNavigateToSignup = {})
-}
-
-@Preview(
-    showBackground = true,
-    name = "Dark Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun LoginScreenPreviewDark() {
-    LoginScreen(onNavigateToHome = {}, onNavigateToSignup = {})
+fun SignupScreenPreview() {
+    SignupScreenContent(
+        uiState = SignupUiState(),
+        toastVisible = false,
+        toastMessage = null,
+        onEmailChange = {},
+        onPasswordChange = {},
+        onConfirmPasswordChange = {},
+        onSignupClick = {},
+        onNavigateToLogin = {}
+    )
 }

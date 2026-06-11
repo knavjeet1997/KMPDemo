@@ -1,12 +1,50 @@
 package com.example.mykmpapplication
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import com.example.mykmpapplication.data.SessionManager
+import com.example.mykmpapplication.ui.HomeScreen
+import com.example.mykmpapplication.ui.LoginScreen
+import com.example.mykmpapplication.ui.SignupScreen
+import com.example.mykmpapplication.ui.SplashScreen
+import org.koin.compose.koinInject
+
+enum class Screen {
+    Splash, Login, Signup, Home
+}
 
 @Composable
 fun App() {
-    MaterialTheme {
-        Text("Shared App")
+    var currentScreen by remember { mutableStateOf(Screen.Splash) }
+    val sessionManager: SessionManager = koinInject()
+
+    AppTheme {
+        when (currentScreen) {
+            Screen.Splash -> {
+                SplashScreen(
+                    onNavigateToHome = { currentScreen = Screen.Home },
+                    onNavigateToLogin = { currentScreen = Screen.Login }
+                )
+            }
+            Screen.Login -> {
+                LoginScreen(
+                    onNavigateToHome = { currentScreen = Screen.Home },
+                    onNavigateToSignup = { currentScreen = Screen.Signup }
+                )
+            }
+            Screen.Signup -> {
+                SignupScreen(
+                    onNavigateToHome = { currentScreen = Screen.Home },
+                    onNavigateToLogin = { currentScreen = Screen.Login }
+                )
+            }
+            Screen.Home -> {
+                HomeScreen(
+                    onLogout = {
+                        sessionManager.clear()
+                        currentScreen = Screen.Login
+                    }
+                )
+            }
+        }
     }
 }

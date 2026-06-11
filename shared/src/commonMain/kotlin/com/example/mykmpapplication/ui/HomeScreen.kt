@@ -14,15 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mykmpapplication.R
+import com.example.mykmpapplication.AppColors
 
 @Composable
 fun HomeScreen(onLogout: () -> Unit) {
-    val bgStart = colorResource(id = R.color.gradient_start)
-    val bgEnd = colorResource(id = R.color.gradient_end)
+    val bgStart = AppColors.gradientStart()
+    val bgEnd = AppColors.gradientEnd()
 
     Box(
         modifier = Modifier
@@ -56,4 +56,10 @@ fun HomeScreen(onLogout: () -> Unit) {
             color = MaterialTheme.colorScheme.onBackground
         )
     }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen(onLogout = {})
 }

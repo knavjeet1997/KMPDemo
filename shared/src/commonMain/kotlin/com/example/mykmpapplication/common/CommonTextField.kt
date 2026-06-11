@@ -8,9 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import com.example.mykmpapplication.R
+import com.example.mykmpapplication.AppColors
 
 @Composable
 fun CommonTextField(
@@ -25,9 +24,9 @@ fun CommonTextField(
         modifier = modifier.fillMaxWidth(),
         placeholder = { Text(text = placeholder) },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = colorResource(id = R.color.calc_function_bg),
-            unfocusedContainerColor = colorResource(id = R.color.calc_function_bg),
-            focusedBorderColor = colorResource(id = R.color.calc_operator_bg),
+            focusedContainerColor = AppColors.calcFunctionBg(),
+            unfocusedContainerColor = AppColors.calcFunctionBg(),
+            focusedBorderColor = AppColors.calcOperatorBg(),
             unfocusedBorderColor = Color.Transparent,
             disabledBorderColor = Color.Transparent
         ),

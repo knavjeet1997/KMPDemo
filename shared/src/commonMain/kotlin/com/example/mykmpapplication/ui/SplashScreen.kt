@@ -1,6 +1,5 @@
 package com.example.mykmpapplication.ui
 
-import android.content.res.Configuration
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -24,21 +23,34 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mykmpapplication.R
+import com.example.mykmpapplication.AppColors
+import com.example.mykmpapplication.di.KoinHelper
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SplashScreen(
-    viewModel: SplashViewModel = koinViewModel(),
+    viewModel: SplashViewModel = remember { KoinHelper().getSplashViewModel() },
     onNavigateToHome: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
+    LaunchedEffect(viewModel) {
+        delay(1500)
+        if (viewModel.isUserLoggedIn()) {
+            onNavigateToHome()
+        } else {
+            onNavigateToLogin()
+        }
+    }
+
+    SplashScreenContent()
+}
+
+@Composable
+fun SplashScreenContent() {
     val scale = remember { Animatable(0.5f) }
     val alpha = remember { Animatable(0.0f) }
 
@@ -55,17 +67,8 @@ fun SplashScreen(
         )
     }
 
-    LaunchedEffect(viewModel) {
-        delay(1500)
-        if (viewModel.isUserLoggedIn()) {
-            onNavigateToHome()
-        } else {
-            onNavigateToLogin()
-        }
-    }
-
-    val bgStart = colorResource(id = R.color.gradient_start)
-    val bgEnd = colorResource(id = R.color.gradient_end)
+    val bgStart = AppColors.gradientStart()
+    val bgEnd = AppColors.gradientEnd()
 
     MaterialTheme {
         Surface(
@@ -86,7 +89,7 @@ fun SplashScreen(
                         text = "TRACK NINJA",
                         fontSize = 42.sp,
                         fontWeight = FontWeight.Bold,
-                        color = colorResource(id = R.color.calc_operator_bg),
+                        color = AppColors.calcOperatorBg(),
                         modifier = Modifier
                             .scale(scale.value)
                             .alpha(alpha.value)
@@ -101,7 +104,7 @@ fun SplashScreen(
                     Spacer(modifier = Modifier.height(50.dp))
                     CircularProgressIndicator(
                         modifier = Modifier.size(40.dp),
-                        color = colorResource(id = R.color.calc_operator_bg),
+                        color = AppColors.calcOperatorBg(),
                         strokeWidth = 3.dp
                     )
                 }
@@ -110,18 +113,8 @@ fun SplashScreen(
     }
 }
 
-@Preview(showBackground = true, name = "Light Mode")
+@Preview
 @Composable
-fun SplashScreenPreviewLight() {
-    SplashScreen(onNavigateToHome = {}, onNavigateToLogin = {})
-}
-
-@Preview(
-    showBackground = true,
-    name = "Dark Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun SplashScreenPreviewDark() {
-    SplashScreen(onNavigateToHome = {}, onNavigateToLogin = {})
+fun SplashScreenPreview() {
+    SplashScreenContent()
 }
